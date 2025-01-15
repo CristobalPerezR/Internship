@@ -96,20 +96,28 @@ if __name__ == "__main__":
     #Plotting and Save on PDF
     i = 0
     j = 0
+    inicio = time.time()
     while j < len(categories):
-        with PdfPages("pdfData\\" + categories[j] + "_LightCurves" + ".pdf") as pdf:
-            while i < len(fraw) and fraw[i][1] == categories[j]:
-                print(i, j)# Archive Index, Category Index
-                data_raw = pd.read_csv(fraw[i][0], delim_whitespace=True, names=["JD", "MAG", "ERR"], na_values="*********")
-                data_CBV = pd.read_csv(fCBV[i][0], delim_whitespace=True, names=["JD", "MAG_Clean", "MAG_After_CBV", "ERR"], na_values="*********")
-                data_OLC = pd.read_csv(fOLC[i][0], delimiter=",", names=["JD", "MAG", "ERR"], na_values="*********")
+        while i < len(fraw) and fraw[i][1] == categories[j]:
+            print(i, j)# Archive Index, Category Index
+            data_raw = pd.read_csv(fraw[i][0], delim_whitespace=True, names=["JD", "MAG", "ERR"], na_values="*********")
+            data_CBV = pd.read_csv(fCBV[i][0], delim_whitespace=True, names=["JD", "MAG_Clean", "MAG_After_CBV", "ERR"], na_values="*********")
+            data_OLC = pd.read_csv(fOLC[i][0], delimiter=",", names=["JD", "MAG", "ERR"], na_values="*********")
 
-                fig, axs = plt.subplots(3, 1, figsize=(10, 12))  # 3 rows y 1 column
-                fig.subplots_adjust(hspace=0.3)
-                title = (fraw[i][1] + " " + fraw[i][2])[:-3]
-                
-                plotting3(data_raw,data_CBV,data_OLC, title, axs)
+            fig, axs = plt.subplots(3, 1, figsize=(10, 12))  # 3 rows y 1 column
+            fig.subplots_adjust(hspace=0.3)
+            title = (fraw[i][1] + " " + fraw[i][2])[:-3]
+            
+            plotting3(data_raw,data_CBV,data_OLC, title, axs)
+
+            subpath = categories[j]+"_LightCurves"
+            file = fraw[i][2][:-3] + ".pdf"
+            os.makedirs(subpath, exist_ok=True)
+            completePath = os.path.join(subpath, file)
+            with PdfPages(completePath) as pdf:
                 pdf.savefig()
-                plt.close()
-                i += 1
-            j += 1
+            plt.close()
+            i += 1
+        j += 1
+    fin = time.time()
+    print(fin - inicio)
