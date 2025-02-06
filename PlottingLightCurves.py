@@ -110,10 +110,11 @@ if __name__ == "__main__":
             
             plotting3(data_raw,data_CBV,data_OLC, title, axs)
 
+            subsub = "LC_PDF"
             subpath = categories[j]+"_LightCurves"
             file = fraw[i][2][:-3] + ".pdf"
-            os.makedirs(subpath, exist_ok=True)
-            completePath = os.path.join(subpath, file)
+            os.makedirs(os.path.join(subsub, subpath), exist_ok=True)
+            completePath = os.path.join(subsub,subpath, file)
             with PdfPages(completePath) as pdf:
                 pdf.savefig()
             plt.close()
